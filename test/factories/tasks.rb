@@ -5,6 +5,6 @@ FactoryBot.define do
     author_id { 1 }
     assignee_id { 1 }
     state { "MyString" }
-    expired_at { "2025-08-30" }
+    expired_at { Date.today }
   end
 end
