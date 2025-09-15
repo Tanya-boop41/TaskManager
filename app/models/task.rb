@@ -14,15 +14,15 @@ class Task < ApplicationRecord
       transition [:new_task, :released] => :archived
     end
 
-    event :start_development do
+    event :to_development do
       transition [:new_task, :in_qa, :in_code_review] => :in_development
     end
 
-    event :start_testing do
+    event :to_testing do
       transition in_development: :in_qa
     end
 
-    event :start_review do
+    event :to_review do
       transition in_qa: :in_code_review
     end
 
