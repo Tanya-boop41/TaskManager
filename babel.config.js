@@ -19,11 +19,7 @@ module.exports = function(api) {
     presets: [
       isTestEnv && [
         '@babel/preset-env',
-        {
-          targets: {
-            node: 'current'
-          }
-        }
+        { targets: { node: 'current' } }
       ],
       (isProductionEnv || isDevelopmentEnv) && [
         '@babel/preset-env',
@@ -34,7 +30,8 @@ module.exports = function(api) {
           modules: false,
           exclude: ['transform-typeof-symbol']
         }
-      ]
+      ],
+      '@babel/preset-react'
     ].filter(Boolean),
     plugins: [
       'babel-plugin-macros',
@@ -43,39 +40,19 @@ module.exports = function(api) {
       '@babel/plugin-transform-destructuring',
       [
         '@babel/plugin-proposal-class-properties',
-        {
-          loose: true
-        }
+        { loose: true }
       ],
       [
         '@babel/plugin-proposal-object-rest-spread',
-        {
-          useBuiltIns: true
-        }
-      ],
-      [
-        '@babel/plugin-proposal-private-methods',
-        {
-          loose: true
-        }
-      ],
-      [
-        '@babel/plugin-proposal-private-property-in-object',
-        {
-          loose: true
-        }
+        { useBuiltIns: true }
       ],
       [
         '@babel/plugin-transform-runtime',
-        {
-          helpers: false
-        }
+        { helpers: false }
       ],
       [
         '@babel/plugin-transform-regenerator',
-        {
-          async: false
-        }
+        { async: false }
       ]
     ].filter(Boolean)
   }
