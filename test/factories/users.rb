@@ -1,10 +1,10 @@
 FactoryBot.define do
   factory :user do
-    sequence(:first_name) { |n| "FirstName#{n}" }
-    sequence(:last_name) { |n| "LastName#{n}" }
-    sequence(:email) { |n| "person#{n}@example.com" }
-    sequence(:password) { |n| "Password#{n}" }
-    sequence(:avatar) { |n| "Avatar#{n}.png" }
+    first_name { generate(:first_name) }
+    last_name { generate(:last_name) }
+    email { generate(:email) }
+    password { generate(:password) }
+    avatar { generate(:avatar) }
     type { "" }
 
     factory :developer do
