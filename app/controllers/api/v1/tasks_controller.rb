@@ -1,4 +1,4 @@
-class Api::V1::TasksController < ApplicationController
+class Api::V1::TasksController < Api::ApplicationController
   def index
     tasks = Task.all
                 .ransack(ransack_params)
