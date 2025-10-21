@@ -10,4 +10,5 @@ class ActiveSupport::TestCase
   fixtures :all
 
   include FactoryBot::Syntax::Methods
+  include AuthHelper
 end
