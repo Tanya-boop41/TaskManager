@@ -1,10 +1,10 @@
 FactoryBot.define do
   factory :user do
-    first_name
-    last_name
-    password
-    email
-    avatar
+    first_name 
+    last_name 
+    email 
+    password 
+    avatar 
     type { "" }
 
     factory :developer do
@@ -15,8 +15,5 @@ FactoryBot.define do
       type { 'Manager' }
     end
 
-    factory :admin do
-      type { 'Admin' }
-    end
   end
 end
