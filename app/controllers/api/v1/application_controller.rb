@@ -1,5 +1,8 @@
 class Api::V1::ApplicationController < Api::ApplicationController
-RANSACK_DEFAULT_SORT = 'id ASC'
+  include AuthHelper
+  respond_to :json
+  
+  RANSACK_DEFAULT_SORT = 'id ASC'
 
   def build_meta(collection)
     {
