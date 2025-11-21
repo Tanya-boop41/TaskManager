@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "dependencies": {
+    "@asseinfo/react-kanban": "^2.2.0",
     "@babel/preset-react": "^7.28.5",
     "@rails/actioncable": "^6.0.0",
     "@rails/activestorage": "^6.0.0",
@@ -15,6 +16,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "regenerator-runtime": "^0.13.11",
+    "styled-components": "^6.1.19",
     "webpacker-react": "^0.3.2"
   },
   "devDependencies": {
