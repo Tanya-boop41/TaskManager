@@ -1,32 +1,43 @@
-FROM ruby:2.7.1-alpine
+FROM ruby:2.7.7-bullseye
 
 ARG RAILS_ROOT=/task_manager
-ARG PACKAGES="vim openssl-dev postgresql-dev build-base curl tzdata git postgresql-client bash screen gcompat"
 
-RUN apk update \
-    && apk upgrade \
-    && apk add --update --no-cache $PACKAGES
+RUN apt-get update -qq && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    git \
+    curl \
+    vim \
+    less \
+    tzdata \
+    bash \
+    sudo \
+ && rm -rf /var/lib/apt/lists/*
 
-RUN curl -fsSL https://unofficial-builds.nodejs.org/download/release/v18.19.0/node-v18.19.0-linux-x64-musl.tar.xz -o node.tar.xz \
-  && tar -xJf node.tar.xz -C /usr/local --strip-components=1 \
-  && rm node.tar.xz \
-  && npm install -g yarn \
-  && node -v && npm -v && yarn -v
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+ && apt-get install -y nodejs \
+ && npm install -g yarn \
+ && rm -rf /var/lib/apt/lists/*
 
-RUN gem install bundler:2.3.22\
-	&& gem update --system 3.3.22
+RUN gem install bundler:2.3.22
 
-RUN mkdir $RAILS_ROOT
 WORKDIR $RAILS_ROOT
 
-COPY Gemfile Gemfile.lock  ./
-RUN bundle install --jobs 5
+COPY Gemfile Gemfile.lock ./
+
+RUN bundle config set path '/usr/local/bundle' \
+ && bundle config unset without \
+ && bundle lock --add-platform ruby \
+ && bundle lock --add-platform arm64-darwin \
+ && bundle install --jobs 5 --retry 3
 
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
-ADD . $RAILS_ROOT
+COPY . $RAILS_ROOT
+
 ENV PATH=$RAILS_ROOT/bin:${PATH}
 
 EXPOSE 3000
+
 CMD ["bundle", "exec", "rails", "s", "-b", "0.0.0.0", "-p", "3000"]
