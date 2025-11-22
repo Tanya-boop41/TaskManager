@@ -1,25 +1,22 @@
-FROM ruby:2.7.7-bullseye
+FROM ruby:3.2.4-alpine
 
 ARG RAILS_ROOT=/task_manager
 
-RUN apt-get update -qq && apt-get install -y \
-    build-essential \
-    libpq-dev \
+RUN apk add --no-cache \
+    build-base \
+    linux-headers \
+    postgresql-dev \
+    tzdata \
     git \
     curl \
-    vim \
-    less \
-    tzdata \
     bash \
-    sudo \
- && rm -rf /var/lib/apt/lists/*
+    less \
+    libc6-compat \
+    nodejs \
+    npm \
+    yarn
 
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
- && apt-get install -y nodejs \
- && npm install -g yarn \
- && rm -rf /var/lib/apt/lists/*
-
-RUN gem install bundler:2.3.22
+RUN gem update --system && gem install bundler
 
 WORKDIR $RAILS_ROOT
 
@@ -28,8 +25,8 @@ COPY Gemfile Gemfile.lock ./
 RUN bundle config set path '/usr/local/bundle' \
  && bundle config unset without \
  && bundle lock --add-platform ruby \
- && bundle lock --add-platform arm64-darwin \
- && bundle install --jobs 5 --retry 3
+ && bundle lock --add-platform aarch64-linux-musl \
+ && bundle install --jobs 5 --retry 5
 
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
