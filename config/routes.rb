@@ -1,8 +1,5 @@
 Rails.application.routes.draw do
   root :to => "web/boards#show"
-  import routes from './ApiRoutes';
-
-  export default routes;
 
   scope module: :web do
     resource :board, only: :show
