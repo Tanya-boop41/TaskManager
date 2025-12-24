@@ -2,6 +2,11 @@ import React, { useEffect, useState } from 'react';
 import KanbanBoard from '@asseinfo/react-kanban';
 import { propOr } from 'ramda';
 
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+
+import useStyles from './useStyles';
+
 import ColumnHeader from 'components/ColumnHeader';
 import Task from 'components/Task';
 import TasksRepository from 'repositories/TasksRepository';
@@ -30,6 +35,7 @@ const TaskBoard = () => {
   const [boardCards, setBoardCards] = useState([]);
   useEffect(() => loadBoard(), []);
   useEffect(() => generateBoard(), [boardCards]);
+  const styles = useStyles();
 
   const loadColumn = (state, page, perPage) => {
     return TasksRepository.index({
@@ -103,6 +109,12 @@ const TaskBoard = () => {
   };
 
   return (
+    <>
+    
+    <Fab className={styles.addButton} color="primary" aria-label="add">
+    <AddIcon />
+    </Fab>
+
     <KanbanBoard
       onCardDragEnd={handleCardDragEnd} 
       renderCard={card => <Task task={card} />}
@@ -110,6 +122,7 @@ const TaskBoard = () => {
     >
         {board}
     </KanbanBoard>
+  </>
   );
 };
 
