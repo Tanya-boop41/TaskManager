@@ -7,9 +7,11 @@ import AddIcon from '@material-ui/icons/Add';
 
 import useStyles from './useStyles';
 
+import AddPopup from 'components/AddPopup';
 import ColumnHeader from 'components/ColumnHeader';
 import Task from 'components/Task';
 import TasksRepository from 'repositories/TasksRepository';
+import TaskForm from 'forms/TaskForm';
 
 const STATES = [
   { key: 'new_task', value: 'New' },
@@ -20,6 +22,11 @@ const STATES = [
   { key: 'released', value: 'Released' },
   { key: 'archived', value: 'Archived' },
 ];
+
+const MODES = {
+  ADD: 'add',
+  NONE: 'none',
+};
 
 const initialBoard = {
   columns: STATES.map(column => ({
@@ -37,6 +44,16 @@ const TaskBoard = () => {
   useEffect(() => generateBoard(), [boardCards]);
   const styles = useStyles();
 
+  const [mode, setMode] = useState(MODES.NONE);
+
+  const handleOpenAddPopup = () => {
+    setMode(MODES.ADD);
+  };
+
+  const handleClose = () => {
+    setMode(MODES.NONE);
+  };
+
   const loadColumn = (state, page, perPage) => {
     return TasksRepository.index({
       q: { stateEq: state },
@@ -53,6 +70,14 @@ const TaskBoard = () => {
           [state]: { cards: data.items, meta: data.meta },
         };
       });
+    });
+  };
+
+  const handleTaskCreate = (params) => {
+    const attributes = TaskForm.attributesToSubmit(params);
+    return TasksRepository.create(attributes).then(({ data: { task } }) => {
+      loadColumnInitial(task.state);
+      handleClose();
     });
   };
 
@@ -111,7 +136,7 @@ const TaskBoard = () => {
   return (
     <>
     
-    <Fab className={styles.addButton} color="primary" aria-label="add">
+    <Fab onClick={handleOpenAddPopup} className={styles.addButton} color="primary" aria-label="add">
     <AddIcon />
     </Fab>
 
@@ -122,6 +147,7 @@ const TaskBoard = () => {
     >
         {board}
     </KanbanBoard>
+    {mode === MODES.ADD && <AddPopup onCardCreate={handleTaskCreate} onClose={handleClose} />}
   </>
   );
 };
